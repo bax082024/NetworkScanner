@@ -29,7 +29,6 @@ class Program
 
         int coreCount = Environment.ProcessorCount;
         Console.WriteLine($"\nYour system has {coreCount} CPU cores.");
-        Console.Write($"\nEnter the number of parallel tasks to use (recommended: {coreCount * 2}): ");
         int parallelTasks = GetParallelTasks(coreCount);
 
         Console.Write("Enter the IP range to scan (e.g., 192.168.1.1-192.168.1.255): ");
@@ -50,11 +49,14 @@ class Program
         Console.WriteLine("\nScanning the network...");
         List<string> activeHosts = ScanNetwork(startIp, endIp, timeout, parallelTasks);
 
-        // Menu after the network scan
-        ShowMenu(activeHosts, timeout, parallelTasks);
+        // Show menu AFTER scanning is completed
+        ShowMenu(activeHosts, timeout, parallelTasks, startIp, endIp);
+
     }
 
-    static void ShowMenu(List<string> activeHosts, int timeout, int parallelTasks)
+
+    static void ShowMenu(List<string> activeHosts, int timeout, int parallelTasks, IPAddress startIp, IPAddress endIp)
+
     {
         while (true)
         {
@@ -70,12 +72,20 @@ class Program
             switch (choice)
             {
                 case "1":
-                    PerformPortScan(activeHosts, timeout, parallelTasks);
+                    activeHosts = ScanNetwork(startIp, endIp, timeout, parallelTasks);
                     break;
 
                 case "2":
-                    SaveToFile(sessionData);
+                    if (activeHosts.Count == 0)
+                    {
+                        Console.WriteLine("\nNo active hosts found. Please perform a network scan first.");
+                    }
+                    else
+                    {
+                        PerformPortScan(activeHosts, timeout, parallelTasks);
+                    }
                     break;
+
                 case "3":
                     if (sessionData.Count == 0)
                     {
@@ -83,17 +93,16 @@ class Program
                     }
                     else
                     {
-                        SaveToFile(sessionData);
+                        SaveToFile(sessionData); 
                     }
                     break;
-
 
                 case "4":
                     Console.WriteLine("Exiting program...");
                     return;
 
                 default:
-                    Console.WriteLine("Invalid choice. Please select 1, 2, or 3.");
+                    Console.WriteLine("Invalid choice. Please select 1, 2, 3, or 4.");
                     break;
             }
         }
@@ -278,8 +287,7 @@ class Program
 
         sessionData.AddRange(activeHosts);
 
-        Console.WriteLine("\nPress Enter to exit...");
-        Console.ReadLine();
+        
 
         return activeHosts;  // Added return statement
     }
