@@ -21,6 +21,13 @@ class Program
             return;
         }
 
+        IPAddress startIp, endIp;
+        if (!IPAddress.TryParse(parts[0], out startIp) || !IPAddress.TryParse(parts[1], out endIp))
+        {
+            Console.WriteLine("Invalid IP address. Please try again.");
+            return;
+        }
+
     }
 
 }
