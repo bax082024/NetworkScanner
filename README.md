@@ -44,3 +44,11 @@ perform port scans, and save the results to a file.
 
 ---
 
+## Output
+
+- Console Output: Displays active hosts, open ports, and progress.
+
+- Saved Report: Generates a .txt file with scan results in the project directory.
+
+---
+
