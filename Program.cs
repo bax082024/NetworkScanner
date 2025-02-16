@@ -14,6 +14,13 @@ class Program
         Console.Write("Enter the IP range to scan (e.g., 192.168.1.1-192.168.1.255): ");
         string input = Console.ReadLine() ?? string.Empty;
 
+        var parts = input.Split('-');
+        if (parts.Length != 2)
+        {
+            Console.WriteLine("Invalid input. Please enter a valid range.");
+            return;
+        }
+
     }
 
 }
