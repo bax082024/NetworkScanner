@@ -134,6 +134,22 @@ class Program
         activeHosts.AddRange(portScanResults);  // Add port scan results to session report
     }
 
+    static void SaveToFile(List<string> sessionData)
+    {
+        string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        string fileName = $"NetworkScanReport_{timestamp}.txt";
+
+        try
+        {
+            File.WriteAllLines(fileName, sessionData);
+            Console.WriteLine($"\nReport saved successfully as {fileName} in the current directory.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"\nFailed to save the report: {ex.Message}");
+        }
+    }
+
 
     public static int CalculateOptimalTimeout(IPAddress startIp, IPAddress endIp, int sampleCount)
     {
