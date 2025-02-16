@@ -49,7 +49,6 @@ class Program
         Console.WriteLine("\nScanning the network...");
         List<string> activeHosts = ScanNetwork(startIp, endIp, timeout, parallelTasks);
 
-        // Show menu AFTER scanning is completed
         ShowMenu(activeHosts, timeout, parallelTasks, startIp, endIp);
 
     }
@@ -128,7 +127,6 @@ class Program
 
         List<string> portScanResults = new List<string>();
 
-        // Parallel scanning for each host
         Parallel.ForEach(activeHosts, new ParallelOptions { MaxDegreeOfParallelism = parallelTasks }, host =>
         {
             Console.WriteLine($"\nScanning ports on {host}...");
@@ -152,7 +150,7 @@ class Program
                     }
                     catch
                     {
-                        // Port is closed or no response
+                        // Port closed
                     }
                 }
             }
@@ -160,7 +158,7 @@ class Program
 
 
         Console.WriteLine("\nPort scan completed.");
-        activeHosts.AddRange(portScanResults);  // Add port scan results to session report
+        activeHosts.AddRange(portScanResults);
     }
 
     static void SaveToFile(List<string> sessionData)
@@ -289,7 +287,7 @@ class Program
 
         
 
-        return activeHosts;  // Added return statement
+        return activeHosts;
     }
 
 
