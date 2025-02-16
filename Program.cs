@@ -28,6 +28,9 @@ class Program
             return;
         }
 
+        Console.WriteLine("\nScanning the network...");
+        ScanNetwork(startIp, endIp);
+
     }
 
 }
