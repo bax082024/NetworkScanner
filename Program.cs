@@ -216,9 +216,7 @@ class Program
     }
 
 
-    public static void ScanNetwork(IPAddress startIp, IPAddress endIp, int timeout, int parallelTasks)
-
-
+    public static List<string> ScanNetwork(IPAddress startIp, IPAddress endIp, int timeout, int parallelTasks)
     {
         List<string> activeHosts = new List<string>();
         uint start = BitConverter.ToUInt32(startIp.GetAddressBytes().Reverse().ToArray(), 0);
@@ -273,12 +271,15 @@ class Program
         {
             Console.WriteLine("No active hosts found.");
         }
-        sessionData.AddRange(activeHosts);
 
+        sessionData.AddRange(activeHosts);
 
         Console.WriteLine("\nPress Enter to exit...");
         Console.ReadLine();
+
+        return activeHosts;  // Added return statement
     }
+
 
     static int GetParallelTasks(int coreCount)
     {
