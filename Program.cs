@@ -7,7 +7,9 @@ class Program
 {
     static void Main()
     {
-
+        Console.WriteLine("================================");
+        Console.WriteLine(" Welcome to the Network Scanner ");
+        Console.WriteLine("================================\n");
 
 
     }
