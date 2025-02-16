@@ -31,3 +31,16 @@ perform port scans, and save the results to a file.
 5. follow instructions.
 
 ---
+
+## How To Use
+
+- Step 1: Enter the number of parallel tasks (recommended: double the number of CPU cores).
+
+- Step 2: Provide an IP range to scan (e.g., 192.168.1.1-192.168.1.255).
+
+- Step 3: Enter the number of samples for estimating network speed.
+
+- Step 4: After scanning, choose from the menu to perform port scans, save results, or exit.
+
+---
+
