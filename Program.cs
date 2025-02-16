@@ -39,9 +39,11 @@ class Program
         uint start = BitConverter.ToUInt32(startIp.GetAddressBytes().Reverse().ToArray(), 0);
         uint end = BitConverter.ToUInt32(endIp.GetAddressBytes().Reverse().ToArray(), 0);
 
-        for (uint ip = start; ip <= end; ip++)
+        Console.WriteLine("Starting parallel scan...");
+
+        Parallel.For((long)start, (long)end + 1, ip =>
         {
-            byte[] addressBytes = BitConverter.GetBytes(ip).Reverse().ToArray();
+            byte[] addressBytes = BitConverter.GetBytes((uint)ip).Reverse().ToArray();
             IPAddress currentIp = new IPAddress(addressBytes);
 
             Console.WriteLine($"Scanning: {currentIp}");
@@ -53,8 +55,11 @@ class Program
                     PingReply reply = ping.Send(currentIp, 1000);
                     if (reply.Status == IPStatus.Success)
                     {
-                        Console.WriteLine($"Host found: {currentIp}");
-                        activeHosts.Add(currentIp.ToString());
+                        lock (activeHosts)  // Prevent conflicts when adding to the list
+                        {
+                            Console.WriteLine($"Host found: {currentIp}");
+                            activeHosts.Add(currentIp.ToString());
+                        }
                     }
                 }
                 catch (PingException ex)
@@ -62,7 +67,7 @@ class Program
                     Console.WriteLine($"Error scanning {currentIp}: {ex.Message}");
                 }
             }
-        }
+        });
 
         Console.WriteLine("Finished scanning all IPs...");
         Thread.Sleep(2000);
@@ -85,6 +90,7 @@ class Program
         Console.WriteLine("\nPress Enter to exit...");
         Console.ReadLine();
     }
+
 
 
 
