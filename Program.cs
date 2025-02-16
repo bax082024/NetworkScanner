@@ -11,6 +11,23 @@ class Program
         Console.WriteLine(" Welcome to the Network Scanner ");
         Console.WriteLine("================================\n");
 
+        // Added: Get CPU cores and set parallel tasks
+        int coreCount = Environment.ProcessorCount;
+        Console.WriteLine($"\nYour system has {coreCount} CPU cores.");
+        Console.Write($"\nEnter the number of parallel tasks to use (recommended: {coreCount * 2}): ");
+        string? parallelInput = Console.ReadLine();
+        int parallelTasks;
+
+        if (string.IsNullOrEmpty(parallelInput))
+        {
+            parallelTasks = coreCount * 2;
+        }
+        else if (!int.TryParse(parallelInput, out parallelTasks) || parallelTasks <= 0)
+        {
+            Console.WriteLine("Invalid input. Using default value.");
+            parallelTasks = coreCount * 2;
+        }
+
         Console.Write("Enter the IP range to scan (e.g., 192.168.1.1-192.168.1.255): ");
         string input = Console.ReadLine() ?? string.Empty;
 
@@ -29,11 +46,10 @@ class Program
         }
 
         Console.WriteLine("\nScanning the network...");
-        ScanNetwork(startIp, endIp);
-
+        ScanNetwork(startIp, endIp, parallelTasks);  // Pass parallelTasks to the method
     }
 
-    public static void ScanNetwork(IPAddress startIp, IPAddress endIp)
+    public static void ScanNetwork(IPAddress startIp, IPAddress endIp, int parallelTasks)
     {
         List<string> activeHosts = new List<string>();
         uint start = BitConverter.ToUInt32(startIp.GetAddressBytes().Reverse().ToArray(), 0);
@@ -41,7 +57,10 @@ class Program
 
         Console.WriteLine("Starting parallel scan...");
 
-        Parallel.For((long)start, (long)end + 1, ip =>
+        // Added: ParallelOptions to limit parallel tasks
+        var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = parallelTasks };
+
+        Parallel.For((long)start, (long)end + 1, parallelOptions, ip =>
         {
             byte[] addressBytes = BitConverter.GetBytes((uint)ip).Reverse().ToArray();
             IPAddress currentIp = new IPAddress(addressBytes);
@@ -55,7 +74,7 @@ class Program
                     PingReply reply = ping.Send(currentIp, 1000);
                     if (reply.Status == IPStatus.Success)
                     {
-                        lock (activeHosts)  // Prevent conflicts when adding to the list
+                        lock (activeHosts)
                         {
                             Console.WriteLine($"Host found: {currentIp}");
                             activeHosts.Add(currentIp.ToString());
@@ -90,14 +109,4 @@ class Program
         Console.WriteLine("\nPress Enter to exit...");
         Console.ReadLine();
     }
-
-
-
-
-
-
-
-
-
-
 }
