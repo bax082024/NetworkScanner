@@ -1,0 +1,15 @@
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\bin\Debug\net8.0\NetworkScanner.exe
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\bin\Debug\net8.0\NetworkScanner.deps.json
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\bin\Debug\net8.0\NetworkScanner.runtimeconfig.json
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\bin\Debug\net8.0\NetworkScanner.dll
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\bin\Debug\net8.0\NetworkScanner.pdb
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\obj\Debug\net8.0\NetworkScanner.GeneratedMSBuildEditorConfig.editorconfig
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\obj\Debug\net8.0\NetworkScanner.AssemblyInfoInputs.cache
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\obj\Debug\net8.0\NetworkScanner.AssemblyInfo.cs
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\obj\Debug\net8.0\NetworkScanner.csproj.CoreCompileInputs.cache
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\obj\Debug\net8.0\NetworkScanner.sourcelink.json
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\obj\Debug\net8.0\NetworkScanner.dll
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\obj\Debug\net8.0\refint\NetworkScanner.dll
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\obj\Debug\net8.0\NetworkScanner.pdb
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\obj\Debug\net8.0\NetworkScanner.genruntimeconfig.cache
+C:\HjemmeKode\C-Sharp\NetworkScanner\NetworkScanner\obj\Debug\net8.0\ref\NetworkScanner.dll
