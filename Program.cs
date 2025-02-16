@@ -7,7 +7,6 @@ class Program
 {
     static List<string> sessionData = new List<string>();
 
-
     public static IEnumerable<IPAddress> GenerateIPRange(IPAddress startIp, IPAddress endIp)
     {
         uint start = BitConverter.ToUInt32(startIp.GetAddressBytes().Reverse().ToArray(), 0);
@@ -19,7 +18,6 @@ class Program
             yield return new IPAddress(addressBytes);
         }
     }
-
 
     static void Main()
     {
@@ -53,9 +51,7 @@ class Program
 
     }
 
-
     static void ShowMenu(List<string> activeHosts, int timeout, int parallelTasks, IPAddress startIp, IPAddress endIp)
-
     {
         while (true)
         {
@@ -177,7 +173,6 @@ class Program
         }
     }
 
-
     public static int CalculateOptimalTimeout(IPAddress startIp, IPAddress endIp, int sampleCount)
     {
         List<long> responseTimes = new List<long>();
@@ -225,7 +220,6 @@ class Program
         Console.WriteLine($"\nCalculated optimal timeout: {optimalTimeout}ms\n");
         return optimalTimeout;
     }
-
 
     public static List<string> ScanNetwork(IPAddress startIp, IPAddress endIp, int timeout, int parallelTasks)
     {
@@ -289,7 +283,6 @@ class Program
 
         return activeHosts;
     }
-
 
     static int GetParallelTasks(int coreCount)
     {
