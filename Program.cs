@@ -33,41 +33,63 @@ class Program
 
     }
 
-    static void ScanNetwork(IPAddress startIp, IPAddress endIp)
+    public static void ScanNetwork(IPAddress startIp, IPAddress endIp)
     {
-        byte[] startBytes = startIp.GetAddressBytes();
-        byte[] endBytes = endIp.GetAddressBytes();
+        List<string> activeHosts = new List<string>();
+        uint start = BitConverter.ToUInt32(startIp.GetAddressBytes().Reverse().ToArray(), 0);
+        uint end = BitConverter.ToUInt32(endIp.GetAddressBytes().Reverse().ToArray(), 0);
 
-        // Convert IPs to integers
-        uint start = BitConverter.ToUInt32(startBytes.Reverse().ToArray(), 0);
-        uint end = BitConverter.ToUInt32(endBytes.Reverse().ToArray(), 0);
-
-        for (uint i = start; i <= end; i++)
+        for (uint ip = start; ip <= end; ip++)
         {
-            byte[] ipBytes = BitConverter.GetBytes(i).Reverse().ToArray();
-            IPAddress ip = new IPAddress(ipBytes);
+            byte[] addressBytes = BitConverter.GetBytes(ip).Reverse().ToArray();
+            IPAddress currentIp = new IPAddress(addressBytes);
 
-            if (PingHost(ip.ToString()))
+            Console.WriteLine($"Scanning: {currentIp}");
+
+            using (Ping ping = new Ping())
             {
-                Console.WriteLine($"[+] Active IP Found: {ip}");
+                try
+                {
+                    PingReply reply = ping.Send(currentIp, 1000);
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        Console.WriteLine($"Host found: {currentIp}");
+                        activeHosts.Add(currentIp.ToString());
+                    }
+                }
+                catch (PingException ex)
+                {
+                    Console.WriteLine($"Error scanning {currentIp}: {ex.Message}");
+                }
             }
         }
+
+        Console.WriteLine("Finished scanning all IPs...");
+        Thread.Sleep(2000);
+        Console.Clear();
+        Console.WriteLine("=== Network Scan Complete ===");
+
+        if (activeHosts.Count > 0)
+        {
+            Console.WriteLine("Active Hosts:");
+            foreach (var host in activeHosts)
+            {
+                Console.WriteLine(host);
+            }
+        }
+        else
+        {
+            Console.WriteLine("No active hosts found.");
+        }
+
+        Console.WriteLine("\nPress Enter to exit...");
+        Console.ReadLine();
     }
 
 
-    static bool PingHost(string ip)
-    {
-        try
-        {
-            Ping ping = new Ping();
-            PingReply reply = ping.Send(ip, 1000); // 1000ms timeout
-            return reply.Status == IPStatus.Success;
-        }
-        catch
-        {
-            return false;
-        }
-    }
+
+
+
 
 
 
