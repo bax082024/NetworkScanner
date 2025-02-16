@@ -49,6 +49,55 @@ class Program
         ScanNetwork(startIp, endIp, parallelTasks);  // Pass parallelTasks to the method
     }
 
+    public static int CalculateOptimalTimeout(IPAddress startIp, IPAddress endIp, int sampleCount)
+    {
+        List<long> responseTimes = new List<long>();
+        var ipAddresses = GenerateIPRange(startIp, endIp).Take(sampleCount).ToList();
+
+        Console.WriteLine("Sampling network response times...");
+
+        foreach (var ip in ipAddresses)
+        {
+            using (Ping ping = new Ping())
+            {
+                try
+                {
+                    var start = DateTime.Now;
+                    PingReply reply = ping.Send(ip, 1000);
+                    var end = DateTime.Now;
+
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        long timeTaken = (end - start).Milliseconds;
+                        responseTimes.Add(timeTaken);
+                        Console.WriteLine($"Ping {ip}: {timeTaken}ms");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"No response from {ip}");
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine($"Error pinging {ip}");
+                }
+            }
+        }
+
+        if (responseTimes.Count == 0)
+        {
+            Console.WriteLine("No successful pings during sampling. Using default timeout (1000ms).");
+            return 1000;
+        }
+
+        double average = responseTimes.Average();
+        int optimalTimeout = Math.Min(1000, Math.Max(100, (int)average + 50));
+
+        Console.WriteLine($"\nCalculated optimal timeout: {optimalTimeout}ms\n");
+        return optimalTimeout;
+    }
+
+
     public static void ScanNetwork(IPAddress startIp, IPAddress endIp, int parallelTasks)
     {
         List<string> activeHosts = new List<string>();
