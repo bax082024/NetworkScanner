@@ -5,3 +5,18 @@ perform port scans, and save the results to a file.
 
 ---
 
+## Features
+
+- IP Range Scanning: Scan any given IP range for active hosts.
+
+- Port Scanning: Scan open ports within a specified range on detected hosts.
+
+- Dynamic Timeout Calculation: Estimates optimal timeout based on network response times.
+
+- Parallel Processing: Supports parallel scanning for faster results.
+
+- Session Data Management: Stores scan results for the current session.
+
+- Report Generation: Saves scan results to a text file with a timestamp.
+
+---
