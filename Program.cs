@@ -70,11 +70,11 @@ class Program
             switch (choice)
             {
                 case "1":
-                    PerformPortScan(activeHosts, timeout, parallelTasks);  // We'll create this next
+                    PerformPortScan(activeHosts, timeout, parallelTasks);
                     break;
 
                 case "2":
-                    SaveToFile(activeHosts, "NetworkScanResults.txt");  // We'll create this too
+                    SaveToFile(sessionData);
                     break;
                 case "3":
                     if (sessionData.Count == 0)
@@ -144,6 +144,7 @@ class Program
                 }
             }
         });
+
 
         Console.WriteLine("\nPort scan completed.");
         activeHosts.AddRange(portScanResults);  // Add port scan results to session report
@@ -272,6 +273,8 @@ class Program
         {
             Console.WriteLine("No active hosts found.");
         }
+        sessionData.AddRange(activeHosts);
+
 
         Console.WriteLine("\nPress Enter to exit...");
         Console.ReadLine();
