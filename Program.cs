@@ -5,6 +5,9 @@ using System.Net.Sockets;
 
 class Program
 {
+    static List<string> sessionData = new List<string>();
+
+
     public static IEnumerable<IPAddress> GenerateIPRange(IPAddress startIp, IPAddress endIp)
     {
         uint start = BitConverter.ToUInt32(startIp.GetAddressBytes().Reverse().ToArray(), 0);
@@ -56,10 +59,11 @@ class Program
         while (true)
         {
             Console.WriteLine("\n================ Menu ================");
-            Console.WriteLine("1. Perform Port Scan on Active Hosts");
-            Console.WriteLine("2. Save Network Scan Result to File");
-            Console.WriteLine("3. Exit");
-            Console.Write("Choose an option (1-3): ");
+            Console.WriteLine("Choose an option:");
+            Console.WriteLine("1. Perform Network Scan");
+            Console.WriteLine("2. Perform Port Scan");
+            Console.WriteLine("3. Save Report to File");
+            Console.WriteLine("4. Exit");
 
             string choice = Console.ReadLine() ?? string.Empty;
 
@@ -72,8 +76,19 @@ class Program
                 case "2":
                     SaveToFile(activeHosts, "NetworkScanResults.txt");  // We'll create this too
                     break;
-
                 case "3":
+                    if (sessionData.Count == 0)
+                    {
+                        Console.WriteLine("\nNo data to save. Please perform a scan first.");
+                    }
+                    else
+                    {
+                        SaveToFile(sessionData);
+                    }
+                    break;
+
+
+                case "4":
                     Console.WriteLine("Exiting program...");
                     return;
 
@@ -261,4 +276,17 @@ class Program
         Console.WriteLine("\nPress Enter to exit...");
         Console.ReadLine();
     }
+
+    static int GetParallelTasks(int coreCount)
+    {
+        Console.Write($"\nEnter the number of parallel tasks to use (recommended: {coreCount * 2}): ");
+        string? parallelInput = Console.ReadLine();
+        if (string.IsNullOrEmpty(parallelInput) || !int.TryParse(parallelInput, out int parallelTasks) || parallelTasks <= 0)
+        {
+            Console.WriteLine("Invalid input. Using default value.");
+            return coreCount * 2;
+        }
+        return parallelTasks;
+    }
+
 }
