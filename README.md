@@ -20,3 +20,14 @@ perform port scans, and save the results to a file.
 - Report Generation: Saves scan results to a text file with a timestamp.
 
 ---
+
+## Installation
+
+1. Clone Repository :
+	- https://github.com/bax082024/NetworkScanner.git
+2. cd NetworkScanner
+3. dotnet build
+4. dotnet run
+5. follow instructions.
+
+---
