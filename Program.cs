@@ -84,6 +84,56 @@ class Program
         }
     }
 
+    static void PerformPortScan(List<string> activeHosts, int timeout, int parallelTasks)
+    {
+        Console.Write("\nEnter the port range to scan (e.g., 20-1024): ");
+        string rangeInput = Console.ReadLine() ?? string.Empty;
+        var parts = rangeInput.Split('-');
+
+        if (parts.Length != 2 || !int.TryParse(parts[0], out int startPort) || !int.TryParse(parts[1], out int endPort) || startPort < 1 || endPort > 65535)
+        {
+            Console.WriteLine("Invalid port range. Please enter a valid range (1-65535).");
+            return;
+        }
+
+        Console.WriteLine("\nStarting port scan...");
+
+        List<string> portScanResults = new List<string>();
+
+        // Parallel scanning for each host
+        Parallel.ForEach(activeHosts, new ParallelOptions { MaxDegreeOfParallelism = parallelTasks }, host =>
+        {
+            Console.WriteLine($"\nScanning ports on {host}...");
+            for (int port = startPort; port <= endPort; port++)
+            {
+                using (TcpClient tcpClient = new TcpClient())
+                {
+                    try
+                    {
+                        tcpClient.ConnectAsync(host, port).Wait(timeout);
+                        if (tcpClient.Connected)
+                        {
+                            string result = $"[OPEN] {host}:{port}";
+                            Console.WriteLine(result);
+                            lock (portScanResults)
+                            {
+                                portScanResults.Add(result);
+                            }
+                            tcpClient.Close();
+                        }
+                    }
+                    catch
+                    {
+                        // Port is closed or no response
+                    }
+                }
+            }
+        });
+
+        Console.WriteLine("\nPort scan completed.");
+        activeHosts.AddRange(portScanResults);  // Add port scan results to session report
+    }
+
 
     public static int CalculateOptimalTimeout(IPAddress startIp, IPAddress endIp, int sampleCount)
     {
