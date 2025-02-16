@@ -5,6 +5,19 @@ using System.Net.Sockets;
 
 class Program
 {
+    public static IEnumerable<IPAddress> GenerateIPRange(IPAddress startIp, IPAddress endIp)
+    {
+        uint start = BitConverter.ToUInt32(startIp.GetAddressBytes().Reverse().ToArray(), 0);
+        uint end = BitConverter.ToUInt32(endIp.GetAddressBytes().Reverse().ToArray(), 0);
+
+        for (uint ip = start; ip <= end; ip++)
+        {
+            byte[] addressBytes = BitConverter.GetBytes(ip).Reverse().ToArray();
+            yield return new IPAddress(addressBytes);
+        }
+    }
+
+
     static void Main()
     {
         Console.WriteLine("================================");
@@ -45,8 +58,13 @@ class Program
             return;
         }
 
+        Console.Write("Enter the number of samples to estimate network speed (e.g., 5): ");
+        int sampleCount = int.Parse(Console.ReadLine() ?? "5");
+
+        int timeout = CalculateOptimalTimeout(startIp, endIp, sampleCount);
+
         Console.WriteLine("\nScanning the network...");
-        ScanNetwork(startIp, endIp, parallelTasks);  // Pass parallelTasks to the method
+        ScanNetwork(startIp, endIp, timeout, parallelTasks);  // Pass parallelTasks to the method
     }
 
     public static int CalculateOptimalTimeout(IPAddress startIp, IPAddress endIp, int sampleCount)
@@ -98,7 +116,9 @@ class Program
     }
 
 
-    public static void ScanNetwork(IPAddress startIp, IPAddress endIp, int parallelTasks)
+    public static void ScanNetwork(IPAddress startIp, IPAddress endIp, int timeout, int parallelTasks)
+
+
     {
         List<string> activeHosts = new List<string>();
         uint start = BitConverter.ToUInt32(startIp.GetAddressBytes().Reverse().ToArray(), 0);
@@ -120,7 +140,7 @@ class Program
             {
                 try
                 {
-                    PingReply reply = ping.Send(currentIp, 1000);
+                    PingReply reply = ping.Send(currentIp, timeout);
                     if (reply.Status == IPStatus.Success)
                     {
                         lock (activeHosts)
