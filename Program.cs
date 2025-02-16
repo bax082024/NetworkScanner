@@ -105,9 +105,13 @@ class Program
         string rangeInput = Console.ReadLine() ?? string.Empty;
         var parts = rangeInput.Split('-');
 
-        if (parts.Length != 2 || !int.TryParse(parts[0], out int startPort) || !int.TryParse(parts[1], out int endPort) || startPort < 1 || endPort > 65535)
+        if (parts.Length != 2
+            || !int.TryParse(parts[0], out int startPort)
+            || !int.TryParse(parts[1], out int endPort)
+            || startPort < 1 || endPort > 65535
+            || startPort > endPort)
         {
-            Console.WriteLine("Invalid port range. Please enter a valid range (1-65535).");
+            Console.WriteLine("Invalid port range. Please enter a valid range (1-65535) with start port <= end port.");
             return;
         }
 
