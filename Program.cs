@@ -50,6 +50,20 @@ class Program
         }
     }
 
+    static bool PingHost(string ip)
+    {
+        try
+        {
+            Ping ping = new Ping();
+            PingReply reply = ping.Send(ip, 1000); // 1000ms timeout
+            return reply.Status == IPStatus.Success;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
 
 
 
